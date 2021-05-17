@@ -1,18 +1,21 @@
+const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 
-app.use('/', (req, res, next) => {
-  console.log('this always run');
-  next();
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get('/add-products', (req, res, next) => {
+  res.send(
+    '<form action="/product" method="post" ><input name="title" /><button>Add</button></form>'
+  );
 });
 
-app.use('/add-products', (req, res, next) => {
-  console.log('in 1st middleware');
-  res.send('<h1>Add Product</h1>');
+app.post('/product', (req, res, next) => {
+  console.log(req.body);
+  res.redirect('/');
 });
 
-app.use('/', (req, res, next) => {
-  console.log('in 2nd middleware');
+app.get('/', (req, res, next) => {
   res.send('<h1>test</h1>');
 });
 
