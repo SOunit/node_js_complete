@@ -7,6 +7,10 @@ const shopRouter = require('./routes/shop');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// template engine
+app.set('view engine', 'pug');
+app.set('views', 'views');
+
 // router
 app.use('/admin', adminData.routes);
 app.use(shopRouter);
