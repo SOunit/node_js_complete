@@ -2,13 +2,13 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
-const adminRouter = require('./routes/admin');
+const adminData = require('./routes/admin');
 const shopRouter = require('./routes/shop');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // router
-app.use('/admin', adminRouter);
+app.use('/admin', adminData.routes);
 app.use(shopRouter);
 
 // to import css
