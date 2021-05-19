@@ -1,7 +1,7 @@
 const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
-const adminData = require('./routes/admin');
+const adminRoutes = require('./routes/admin');
 const shopRouter = require('./routes/shop');
 
 const app = express();
@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 // router
-app.use('/admin', adminData.routes);
+app.use('/admin', adminRoutes);
 app.use(shopRouter);
 
 // to import css
