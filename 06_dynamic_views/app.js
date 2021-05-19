@@ -1,9 +1,10 @@
 const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
-const app = express();
 const adminData = require('./routes/admin');
 const shopRouter = require('./routes/shop');
+
+const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
