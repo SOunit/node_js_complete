@@ -3,13 +3,15 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const adminData = require('./routes/admin');
 const shopRouter = require('./routes/shop');
+const expressHbs = require('express-handlebars');
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // template engine
-app.set('view engine', 'pug');
+app.engine('hbs', expressHbs());
+app.set('view engine', 'hbs');
 app.set('views', 'views');
 
 // router
