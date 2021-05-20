@@ -1,12 +1,14 @@
 const Product = require('../models/product');
 
 exports.getIndex = (req, res, next) => {
-  res.render('shop/index', {
-    path: '/',
-    productCSS: true,
-    formsCSS: false,
-    pageTitle: 'Shop',
-    prods: [],
+  Product.fetchAll((products) => {
+    res.render('shop/index', {
+      path: '/',
+      productCSS: true,
+      formsCSS: false,
+      pageTitle: 'Shop',
+      prods: products,
+    });
   });
 };
 
