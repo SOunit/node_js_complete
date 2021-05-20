@@ -1,29 +1,34 @@
 const fs = require('fs');
 const path = require('path');
 
+// create products json path
+const p = path.join(
+  path.dirname(require.main.filename),
+  'data',
+  'products.json'
+);
+
+const getProductsFromFile = (cb) => {
+  // try to get data from json
+  fs.readFile(p, (err, fileContent) => {
+    if (err) {
+      // err means
+      // data NOT exists in json file
+      cb([]);
+    } else {
+      // data exists in json file
+      cb(JSON.parse(fileContent));
+    }
+  });
+};
+
 module.exports = class Product {
   constructor(title) {
     this.title = title;
   }
 
   save() {
-    // create products json path
-    const p = path.join(
-      path.dirname(require.main.filename),
-      'data',
-      'products.json'
-    );
-
-    // get products from file
-    fs.readFile(p, (err, fileContent) => {
-      // initialize products
-      let products = [];
-
-      // if data exists, update products
-      if (!err) {
-        products = JSON.parse(fileContent);
-      }
-
+    getProductsFromFile((products) => {
       // add new product
       products.push(this);
 
@@ -35,19 +40,6 @@ module.exports = class Product {
   }
 
   static fetchAll(cb) {
-    // create products json path
-    const p = path.join(
-      path.dirname(require.main.filename),
-      'data',
-      'products.json'
-    );
-
-    fs.readFile(p, (err, fileContent) => {
-      if (err) {
-        cb([]);
-      }
-
-      cb(JSON.parse(fileContent));
-    });
+    getProductsFromFile(cb);
   }
 };
