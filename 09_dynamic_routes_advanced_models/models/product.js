@@ -31,6 +31,7 @@ module.exports = class Product {
   }
 
   save() {
+    this.id = Math.random().toString();
     getProductsFromFile((products) => {
       // add new product
       products.push(this);
