@@ -21,10 +21,13 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  res.render('admin/products', {
-    pageTitle: 'Admin Products',
-    path: '/admin/products',
-    productCSS: true,
-    formsCSS: true,
+  Product.fetchAll((products) => {
+    res.render('admin/products', {
+      path: '/admin/products',
+      productCSS: true,
+      formsCSS: false,
+      pageTitle: 'Admin Products',
+      prods: products,
+    });
   });
 };
