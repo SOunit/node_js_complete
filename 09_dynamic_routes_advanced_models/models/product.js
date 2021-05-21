@@ -1,8 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const {
-  getProducts,
-} = require('../../07_02_mvc_save_json/controllers/products');
 
 // create products json path
 const p = path.join(
