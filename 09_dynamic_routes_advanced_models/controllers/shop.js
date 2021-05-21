@@ -27,9 +27,14 @@ exports.getProducts = (req, res, next) => {
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
   Product.findById(prodId, (product) => {
-    console.log(product);
+    res.render('shop/product-detail', {
+      product: product,
+      pageTitle: 'Product Detail',
+      path: '/products',
+      productCSS: true,
+      formsCSS: false,
+    });
   });
-  res.redirect('/');
 };
 
 exports.getCart = (req, res, next) => {
