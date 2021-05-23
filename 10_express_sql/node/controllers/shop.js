@@ -35,15 +35,19 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findById(prodId, (product) => {
-    res.render('shop/product-detail', {
-      product: product,
-      pageTitle: 'Product Detail',
-      path: '/products',
-      productCSS: true,
-      formsCSS: false,
+  Product.findById(prodId)
+    .then(([product]) => {
+      res.render('shop/product-detail', {
+        product: product[0],
+        pageTitle: 'Product Detail',
+        path: '/products',
+        productCSS: true,
+        formsCSS: false,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 // 1. get all products in cart
