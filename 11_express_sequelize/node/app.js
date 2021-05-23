@@ -3,9 +3,10 @@ const bodyParser = require('body-parser');
 const express = require('express');
 
 const errorController = require('./controllers/error');
-
 const adminRoutes = require('./routes/admin');
 const shopRouter = require('./routes/shop');
+
+const sequelize = require('./util/database');
 
 const app = express();
 
@@ -25,4 +26,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 404 router
 app.use(errorController.get404);
 
-app.listen(3000);
+// create tables
+sequelize
+  .sync()
+  .then((result) => {
+    // console.log(result);
+    app.listen(3000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
