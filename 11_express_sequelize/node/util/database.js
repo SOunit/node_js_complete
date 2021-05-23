@@ -1,11 +1,8 @@
-const mysql = require('mysql2');
+const Sequelize = require('sequelize');
 
-// pool offer automatic open and close db connection
-const pool = mysql.createPool({
+const sequelize = new Sequelize('node-complete', 'root', 'example', {
+  dialect: 'mysql',
   host: 'mysql_host',
-  database: 'node-complete',
-  user: 'root',
-  password: 'rootPassword',
 });
 
-module.exports = pool.promise();
+module.exports = sequelize;
