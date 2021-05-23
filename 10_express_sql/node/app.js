@@ -1,9 +1,14 @@
 const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
+
+const errorController = require('./controllers/error');
+
 const adminRoutes = require('./routes/admin');
 const shopRouter = require('./routes/shop');
-const errorController = require('./controllers/error');
+const db = require('./util/database');
+
+db.execute('SELECT * FROM products');
 
 const app = express();
 

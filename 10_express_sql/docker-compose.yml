@@ -22,3 +22,17 @@ services:
       - PMA_PASSWORD=example
     ports:
       - 3030:80
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - 80:80
+  node:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./node
+    volumes:
+      - ./app/node_modules
+      - ./node:/app
