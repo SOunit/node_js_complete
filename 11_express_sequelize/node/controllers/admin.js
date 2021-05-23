@@ -68,15 +68,19 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render('admin/products', {
-      path: '/admin/products',
-      productCSS: true,
-      formsCSS: false,
-      pageTitle: 'Admin Products',
-      prods: products,
+  Product.findAll()
+    .then((products) => {
+      res.render('admin/products', {
+        pageTitle: 'Admin Products',
+        path: '/admin/products',
+        prods: products,
+        productCSS: true,
+        formsCSS: false,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 };
 
 exports.postDeleteProduct = (req, res, next) => {
