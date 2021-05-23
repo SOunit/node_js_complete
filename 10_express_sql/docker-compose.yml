@@ -5,7 +5,7 @@ services:
     restart: always
     container_name: mysql_host
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: rootPassword
       MYSQL_DATABASE: node-complete
       MYSQL_USER: test
       MYSQL_PASSWORD: test
@@ -19,7 +19,7 @@ services:
       - PMA_ARBITRARY=1
       - PMA_HOSTS=mysql_host
       - PMA_USER=root
-      - PMA_PASSWORD=example
+      - PMA_PASSWORD=rootPassword
     ports:
       - 3030:80
   nginx:
