@@ -38,13 +38,32 @@ exports.getProduct = (req, res, next) => {
   });
 };
 
+// 1. get all products in cart
+// 2. get all products
+// 3. loop all products
+// 4. check if product is in cart
+// 5. create product data if product is in cart
 exports.getCart = (req, res, next) => {
-  res.render('shop/cart', {
-    path: '/cart',
-    productCSS: true,
-    formsCSS: false,
-    pageTitle: 'Your Cart',
-    prods: [],
+  Cart.getCart((cart) => {
+    Product.fetchAll((products) => {
+      // create product data list in cart
+      const cartProducts = [];
+      for (product of products) {
+        const cartProductData = cart.products.find(
+          (prod) => prod.id === product.id
+        );
+        if (cartProductData) {
+          cartProducts.push({ productData: product, qty: cartProductData.qty });
+        }
+      }
+      res.render('shop/cart', {
+        path: '/cart',
+        pageTitle: 'Your Cart',
+        products: cartProducts,
+        productCSS: true,
+        formsCSS: false,
+      });
+    });
   });
 };
 
