@@ -1,0 +1,19 @@
+// how to login to mysql in console
+start docker compose
+    docker-compose up
+execute bash
+    docker exec -it node_comp_mysql_1 bash -p
+
+// enter user, password
+mysql -u test -p
+test
+
+// how to get dump
+export in phpmyadmin
+    this command should run on server level, not database level. 
+    so that dump sql includes creating database command.
+import in phpmyadmin
+
+// access to phpmyadmin
+http request to the url below
+localhost:3030
