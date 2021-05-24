@@ -7,6 +7,8 @@ const adminRoutes = require('./routes/admin');
 const shopRouter = require('./routes/shop');
 
 const sequelize = require('./util/database');
+const Product = require('./models/product');
+const User = require('./models/user');
 
 const app = express();
 
@@ -26,9 +28,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 404 router
 app.use(errorController.get404);
 
+// create relation
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+User.hasMany(Product);
+
 // create tables
+const reCreateTable = false;
 sequelize
-  .sync()
+  .sync({ force: reCreateTable })
   .then((result) => {
     // console.log(result);
     app.listen(3000);
