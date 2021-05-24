@@ -28,6 +28,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 404 router
 app.use(errorController.get404);
 
+// set user
+app.use((req, res, next) => {
+  User.findByPk(1)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
+});
+
 // create relation
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Product);
@@ -38,6 +48,16 @@ sequelize
   .sync({ force: reCreateTable })
   .then((result) => {
     // console.log(result);
+    return User.findByPk(1);
+  })
+  .then((user) => {
+    if (!user) {
+      return User.create({ name: 'Max', email: 'test@test.com' });
+    }
+    return user;
+  })
+  .then((user) => {
+    // console.log(user);
     app.listen(3000);
   })
   .catch((err) => {
