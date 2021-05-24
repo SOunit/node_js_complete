@@ -18,15 +18,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-// router
-app.use('/admin', adminRoutes);
-app.use(shopRouter);
-
 // to import css
 app.use(express.static(path.join(__dirname, 'public')));
-
-// 404 router
-app.use(errorController.get404);
 
 // set user
 app.use((req, res, next) => {
@@ -37,6 +30,11 @@ app.use((req, res, next) => {
     })
     .catch((err) => console.log(err));
 });
+
+// router
+app.use('/admin', adminRoutes);
+app.use(shopRouter);
+app.use(errorController.get404);
 
 // create relation
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
