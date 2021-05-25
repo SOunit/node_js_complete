@@ -1,6 +1,8 @@
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 
+// connection pool
+// to use one connection in other places
 let _db;
 
 const mongoConnect = (callback) => {
@@ -9,7 +11,7 @@ const mongoConnect = (callback) => {
     .then((client) => {
       console.log('connected!');
       _db = client.db('shop');
-      callback(client);
+      callback();
     })
     .catch((err) => {
       console.log(err);
