@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const getDb = require('../util/database').getDb;
 
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
@@ -21,6 +22,22 @@ exports.postAddProduct = (req, res, next) => {
     .save()
     .then(() => {
       res.redirect('/admin/products');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.getProducts = (req, res, next) => {
+  Product.fetchAll()
+    .then((products) => {
+      res.render('admin/products', {
+        pageTitle: 'Admin Products',
+        path: '/admin/products',
+        prods: products,
+        productCSS: true,
+        formsCSS: false,
+      });
     })
     .catch((err) => {
       console.log(err);
@@ -74,23 +91,6 @@ exports.postAddProduct = (req, res, next) => {
 //       res.redirect('/admin/products');
 //     })
 //     .catch((err) => console.log(err));
-// };
-
-// exports.getProducts = (req, res, next) => {
-//   req.user
-//     .getProducts()
-//     .then((products) => {
-//       res.render('admin/products', {
-//         pageTitle: 'Admin Products',
-//         path: '/admin/products',
-//         prods: products,
-//         productCSS: true,
-//         formsCSS: false,
-//       });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
 // };
 
 // exports.postDeleteProduct = (req, res, next) => {
