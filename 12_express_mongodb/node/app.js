@@ -5,7 +5,7 @@ const mongoConnect = require('./util/database').mongoConnect;
 
 const errorController = require('./controllers/error');
 const adminRoutes = require('./routes/admin');
-// const shopRouter = require('./routes/shop');
+const shopRouter = require('./routes/shop');
 
 const app = express();
 
@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // router
 app.use('/admin', adminRoutes);
-// app.use(shopRouter);
+app.use(shopRouter);
 app.use(errorController.get404);
 
 mongoConnect(() => {
