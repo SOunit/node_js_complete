@@ -1,27 +1,12 @@
 version: '3'
 services:
-  mysql:
-    image: mysql
+  mongo:
+    image: mongo
     restart: always
-    container_name: mysql_host
     environment:
-      MYSQL_ROOT_PASSWORD: rootPassword
-      MYSQL_DATABASE: node-complete
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
-    ports:
-      - 3306:3306
-  phpmyadmin:
-    container_name: test_phpmyadmin
-    image: phpmyadmin/phpmyadmin
-    environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOSTS=mysql_host
-      - PMA_USER=root
-      - PMA_PASSWORD=rootPassword
-    ports:
-      - 3030:80
+      MONGO_INITDB_ROOT_USERNAME: rootUser
+      MONGO_INITDB_ROOT_PASSWORD: rootPass
+      MONGO_INITDB_DATABASE: shop
   nginx:
     restart: always
     build:
