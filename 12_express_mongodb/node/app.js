@@ -38,7 +38,7 @@ app.use((req, res, next) => {
       }
     })
     .then((user) => {
-      req.user = user;
+      req.user = new User(user.name, user.email, user.cart, user_id);
       console.log(req.user);
       next();
     })
