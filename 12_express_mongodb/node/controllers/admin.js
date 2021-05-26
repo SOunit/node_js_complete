@@ -96,16 +96,12 @@ exports.postEditProduct = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-// exports.postDeleteProduct = (req, res, next) => {
-//   const productId = req.body.productId;
+exports.postDeleteProduct = (req, res, next) => {
+  const productId = req.body.productId;
 
-//   Product.findByPk(productId)
-//     .then((product) => {
-//       return product.destroy();
-//     })
-//     .then((result) => {
-//       console.log(result);
-//       res.redirect('/admin/products');
-//     })
-//     .catch((err) => console.log(err));
-// };
+  Product.deleteById(productId)
+    .then(() => {
+      res.redirect('/admin/products');
+    })
+    .catch((err) => console.log(err));
+};
