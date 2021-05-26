@@ -92,6 +92,27 @@ class User {
       );
   };
 
+  addOrder = () => {
+    const db = getDb();
+
+    // insert order in mongodb
+    return db
+      .collection('orders')
+      .insertOne(this.cart)
+      .then((result) => {
+        // update cart
+        this.cart = { items: [] };
+        // update cart in mongodb
+        return db
+          .collection('users')
+          .updateOne(
+            { _id: mongodb.ObjectId(this._id) },
+            { $set: { cart: { items: [] } } }
+          );
+      })
+      .catch((err) => console.log(err));
+  };
+
   static findById = (userId) => {
     const db = getDb();
     return db
