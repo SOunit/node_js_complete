@@ -38,13 +38,12 @@ app.use((req, res, next) => {
       }
     })
     .then((user) => {
-      req.user = new User(user.name, user.email, user.cart, user_id);
-      console.log(req.user);
+      req.user = new User(user.name, user.email, user.cart, user._id);
+      console.log('app set user', req.user);
       next();
     })
     .catch((err) => {
       console.log(err);
-      next();
     });
 });
 
