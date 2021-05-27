@@ -3,10 +3,6 @@ services:
   mongo:
     image: mongo
     restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: rootUser
-      MONGO_INITDB_ROOT_PASSWORD: rootPass
-      MONGO_INITDB_DATABASE: shop
   nginx:
     restart: always
     build:
