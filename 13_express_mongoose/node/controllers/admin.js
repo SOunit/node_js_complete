@@ -27,81 +27,79 @@ exports.postAddProduct = (req, res, next) => {
     });
 };
 
-// exports.getProducts = (req, res, next) => {
-//   Product.fetchAll()
-//     .then((products) => {
-//       res.render('admin/products', {
-//         pageTitle: 'Admin Products',
-//         path: '/admin/products',
-//         prods: products,
-//         productCSS: true,
-//         formsCSS: false,
-//       });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
+exports.getProducts = (req, res, next) => {
+  Product.find()
+    .then((products) => {
+      res.render('admin/products', {
+        pageTitle: 'Admin Products',
+        path: '/admin/products',
+        prods: products,
+        productCSS: true,
+        formsCSS: false,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-// exports.getEditProduct = (req, res, next) => {
-//   const editMode = req.query.edit;
+exports.getEditProduct = (req, res, next) => {
+  const editMode = req.query.edit;
 
-//   if (!editMode) {
-//     // return to stop process here
-//     return res.redirect('/');
-//   }
+  if (!editMode) {
+    // return to stop process here
+    return res.redirect('/');
+  }
 
-//   const prodId = req.params.productId;
-//   Product.findById(prodId)
-//     .then((product) => {
-//       if (!product) {
-//         return res.redirect('/');
-//       }
-//       res.render('admin/edit-product', {
-//         pageTitle: 'Edit Product',
-//         path: '/admin/edit-product',
-//         productCSS: true,
-//         formsCSS: true,
-//         editing: editMode,
-//         product,
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// };
+  const prodId = req.params.productId;
+  Product.findById(prodId)
+    .then((product) => {
+      if (!product) {
+        return res.redirect('/');
+      }
+      res.render('admin/edit-product', {
+        pageTitle: 'Edit Product',
+        path: '/admin/edit-product',
+        productCSS: true,
+        formsCSS: true,
+        editing: editMode,
+        product,
+      });
+    })
+    .catch((err) => console.log(err));
+};
 
-// exports.postEditProduct = (req, res, next) => {
-//   // set values
-//   const prodId = req.body.productId;
-//   const updatedTitle = req.body.title;
-//   const updatedPrice = req.body.price;
-//   const updatedImageUrl = req.body.imageUrl;
-//   const updatedDescription = req.body.description;
+exports.postEditProduct = (req, res, next) => {
+  // set values
+  const prodId = req.body.productId;
+  const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
+  const updatedImageUrl = req.body.imageUrl;
+  const updatedDescription = req.body.description;
 
-//   // create new proeduct
-//   const updatedProduct = new Product(
-//     updatedTitle,
-//     updatedPrice,
-//     updatedDescription,
-//     updatedImageUrl,
-//     prodId
-//   );
+  // fetch target product
+  Product.findById(prodId)
+    .then((product) => {
+      // update product
+      product.title = updatedTitle;
+      product.price = updatedPrice;
+      product.imageUrl = updatedImageUrl;
+      product.description = updatedDescription;
+      return product.save();
+    })
+    .then((result) => {
+      console.log(result);
+      res.redirect('/admin/products');
+    })
+    .catch((err) => console.log(err));
+};
 
-//   // update product
-//   updatedProduct
-//     .save()
-//     .then((result) => {
-//       console.log(result);
-//       res.redirect('/admin/products');
-//     })
-//     .catch((err) => console.log(err));
-// };
+exports.postDeleteProduct = (req, res, next) => {
+  const productId = req.body.productId;
 
-// exports.postDeleteProduct = (req, res, next) => {
-//   const productId = req.body.productId;
-
-//   Product.deleteById(productId)
-//     .then(() => {
-//       res.redirect('/admin/products');
-//     })
-//     .catch((err) => console.log(err));
-// };
+  Product.deleteById(productId)
+    .then(() => {
+      res.redirect('/admin/products');
+    })
+    .catch((err) => console.log(err));
+};
