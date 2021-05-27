@@ -1,12 +1,12 @@
 const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
-const mongoConnect = require('./util/database').mongoConnect;
 
 const errorController = require('./controllers/error');
-const adminRoutes = require('./routes/admin');
-const shopRouter = require('./routes/shop');
-const User = require('./models/user');
+// const adminRoutes = require('./routes/admin');
+// const shopRouter = require('./routes/shop');
+// const User = require('./models/user');
+const mongoose = require('mongoose');
 
 const app = express();
 
@@ -20,38 +20,43 @@ app.set('views', 'views');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // set user
-app.use((req, res, next) => {
-  // get user
-  User.findById('60adcd7606889d084be6f490')
-    .then((user) => {
-      if (user) {
-        // user exists, use user
-        return user;
-      } else {
-        // user NOT exist, create user
-        const newUser = new User(
-          'test name',
-          'email@test.com',
-          '60adcd7606889d084be6f490'
-        );
-        return newUser.save();
-      }
-    })
-    .then((user) => {
-      req.user = new User(user.name, user.email, user.cart, user._id);
-      console.log('app set user', req.user);
-      next();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+// app.use((req, res, next) => {
+//   // get user
+//   User.findById('60adcd7606889d084be6f490')
+//     .then((user) => {
+//       if (user) {
+//         // user exists, use user
+//         return user;
+//       } else {
+//         // user NOT exist, create user
+//         const newUser = new User(
+//           'test name',
+//           'email@test.com',
+//           '60adcd7606889d084be6f490'
+//         );
+//         return newUser.save();
+//       }
+//     })
+//     .then((user) => {
+//       req.user = new User(user.name, user.email, user.cart, user._id);
+//       console.log('app set user', req.user);
+//       next();
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
 
 // router
-app.use('/admin', adminRoutes);
-app.use(shopRouter);
+// app.use('/admin', adminRoutes);
+// app.use(shopRouter);
 app.use(errorController.get404);
 
-mongoConnect(() => {
-  app.listen(3000);
-});
+mongoose
+  .connect('mongodb://mongo:27017/shop')
+  .then((result) => {
+    app.listen(3000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
