@@ -4,7 +4,7 @@ const express = require('express');
 
 const errorController = require('./controllers/error');
 const adminRoutes = require('./routes/admin');
-// const shopRouter = require('./routes/shop');
+const shopRouter = require('./routes/shop');
 // const User = require('./models/user');
 const mongoose = require('mongoose');
 
@@ -49,7 +49,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // router
 app.use('/admin', adminRoutes);
-// app.use(shopRouter);
+app.use(shopRouter);
 app.use(errorController.get404);
 
 mongoose
