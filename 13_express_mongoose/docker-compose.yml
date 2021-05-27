@@ -1,0 +1,23 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: rootUser
+      MONGO_INITDB_ROOT_PASSWORD: rootPass
+      MONGO_INITDB_DATABASE: shop
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - 80:80
+  node:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./node
+    volumes:
+      - ./app/node_modules
+      - ./node:/app
