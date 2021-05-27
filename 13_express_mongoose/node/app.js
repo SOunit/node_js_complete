@@ -5,7 +5,7 @@ const express = require('express');
 const errorController = require('./controllers/error');
 const adminRoutes = require('./routes/admin');
 const shopRouter = require('./routes/shop');
-// const User = require('./models/user');
+const User = require('./models/user');
 const mongoose = require('mongoose');
 
 const app = express();
@@ -20,32 +20,18 @@ app.set('views', 'views');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // set user
-// app.use((req, res, next) => {
-//   // get user
-//   User.findById('60adcd7606889d084be6f490')
-//     .then((user) => {
-//       if (user) {
-//         // user exists, use user
-//         return user;
-//       } else {
-//         // user NOT exist, create user
-//         const newUser = new User(
-//           'test name',
-//           'email@test.com',
-//           '60adcd7606889d084be6f490'
-//         );
-//         return newUser.save();
-//       }
-//     })
-//     .then((user) => {
-//       req.user = new User(user.name, user.email, user.cart, user._id);
-//       console.log('app set user', req.user);
-//       next();
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// });
+app.use((req, res, next) => {
+  // fetch user
+  User.findById('60b0225c202db80324c80e6a')
+    .then((user) => {
+      req.user = user;
+      console.log('app set user', req.user);
+      next();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
 // router
 app.use('/admin', adminRoutes);
@@ -55,6 +41,20 @@ app.use(errorController.get404);
 mongoose
   .connect('mongodb://mongo:27017/shop')
   .then((result) => {
+    User.findOne().then((user) => {
+      if (!user) {
+        const user = new User({
+          name: 'Max',
+          email: 'test@test.com',
+          cart: { items: [] },
+          _id: '60b0225c202db80324c80e6a',
+        });
+        user.save().then((user) => {
+          console.log(user);
+        });
+      }
+    });
+
     app.listen(3000);
   })
   .catch((err) => {
