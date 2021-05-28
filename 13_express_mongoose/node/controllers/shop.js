@@ -19,6 +19,7 @@ exports.getIndex = (req, res, next) => {
 exports.getProducts = (req, res, next) => {
   Product.find()
     .then((products) => {
+      console.log(products);
       res.render('shop/product-list', {
         prods: products,
         pageTitle: 'All Products',
@@ -44,21 +45,13 @@ exports.getProduct = (req, res, next) => {
         formsCSS: false,
       });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => console.log(err));
 };
 
-// 1. get all products in cart
-// 2. get all products
-// 3. loop all products
-// 4. check if product is in cart
-// 5. create product data if product is in cart
 exports.getCart = (req, res, next) => {
   req.user
     .getCart()
     .then((products) => {
-      console.log(products);
       res.render('shop/cart', {
         path: '/cart',
         pageTitle: 'Your Cart',
@@ -72,8 +65,6 @@ exports.getCart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
-  console.log('postCart', prodId);
-
   Product.findById(prodId)
     .then((product) => {
       return req.user.addToCart(product);
@@ -101,31 +92,20 @@ exports.postOrder = (req, res, next) => {
     .then((result) => {
       res.redirect('/orders');
     })
-    .catch((err) => console(err));
+    .catch((err) => console.log(err));
 };
 
 exports.getOrders = (req, res, next) => {
   req.user
     .getOrders()
     .then((orders) => {
-      console.log(orders);
       res.render('shop/orders', {
         path: '/orders',
         productCSS: true,
         formsCSS: false,
-        pageTitle: 'Your Order',
+        pageTitle: 'Your Orders',
         orders: orders,
       });
     })
     .catch((err) => console.log(err));
-};
-
-exports.getCheckout = (req, res, next) => {
-  res.render('shop/checkout', {
-    path: '/checkout',
-    productCSS: true,
-    formsCSS: false,
-    pageTitle: 'Checkout',
-    prods: [],
-  });
 };

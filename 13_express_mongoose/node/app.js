@@ -4,7 +4,7 @@ const express = require('express');
 
 const errorController = require('./controllers/error');
 const adminRoutes = require('./routes/admin');
-const shopRouter = require('./routes/shop');
+const shopRoutes = require('./routes/shop');
 const User = require('./models/user');
 const mongoose = require('mongoose');
 
@@ -25,17 +25,14 @@ app.use((req, res, next) => {
   User.findById('60b0225c202db80324c80e6a')
     .then((user) => {
       req.user = user;
-      console.log('app set user', req.user);
       next();
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => console.log(err));
 });
 
 // router
 app.use('/admin', adminRoutes);
-app.use(shopRouter);
+app.use(shopRoutes);
 app.use(errorController.get404);
 
 mongoose
@@ -45,16 +42,14 @@ mongoose
       if (!user) {
         const user = new User({
           name: 'Max',
-          email: 'test@test.com',
-          cart: { items: [] },
-          _id: '60b0225c202db80324c80e6a',
+          email: 'max@test.com',
+          cart: {
+            items: [],
+          },
         });
-        user.save().then((user) => {
-          console.log(user);
-        });
+        user.save();
       }
     });
-
     app.listen(3000);
   })
   .catch((err) => {
