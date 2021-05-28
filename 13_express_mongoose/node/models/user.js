@@ -23,6 +23,37 @@ const userSchema = new Schema({
   },
 });
 
+// this here needs function syntacs for "this" reference
+userSchema.methods.addToCart = function (product) {
+  // try to fetch product from cart
+  const cartProductIndex = this.cart.items.findIndex((cp) => {
+    return cp.productId.toString() === product._id.toString();
+  });
+
+  // setup variables
+  let newQuantity = 1;
+  const updatedCartItems = [...this.cart.items];
+
+  // if cart has item
+  if (cartProductIndex >= 0) {
+    // update product by adding quantity
+    newQuantity = this.cart.items[cartProductIndex].quantity + 1;
+    updatedCartItems[cartProductIndex].quantity = newQuantity;
+  } else {
+    // add new product to cart
+    updatedCartItems.push({
+      productId: product._id,
+      quantity: newQuantity,
+    });
+  }
+  const updatedCart = {
+    items: updatedCartItems,
+  };
+
+  this.cart = updatedCart;
+  return this.save();
+};
+
 module.exports = mongoose.model('User', userSchema);
 
 // const mongodb = require('mongodb');
