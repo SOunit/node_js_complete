@@ -39,7 +39,6 @@ app.use((req, res, next) => {
       return user;
     })
     .then((user) => {
-      console.log(user);
       req.user = user;
       next();
     })
