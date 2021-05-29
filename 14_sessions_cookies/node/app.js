@@ -1,6 +1,7 @@
 const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
+const session = require('express-session');
 
 const errorController = require('./controllers/error');
 const adminRoutes = require('./routes/admin');
@@ -11,14 +12,17 @@ const mongoose = require('mongoose');
 
 const app = express();
 
+// middle wares
 app.use(bodyParser.urlencoded({ extended: false }));
-
 // template engine
 app.set('view engine', 'ejs');
 app.set('views', 'views');
-
 // to import css
 app.use(express.static(path.join(__dirname, 'public')));
+// session config
+app.use(
+  session({ secret: 'my secret', resave: false, saveUninitialized: false })
+);
 
 // set user
 app.use((req, res, next) => {
