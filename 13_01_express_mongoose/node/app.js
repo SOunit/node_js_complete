@@ -21,25 +21,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // set user
 app.use((req, res, next) => {
-  // try to fetch user
-  User.findOne()
+  // fetch user
+  User.findById('60b0225c202db80324c80e6a')
     .then((user) => {
-      // if user NOT exist
-      if (!user) {
-        const user = new User({
-          name: 'Max',
-          email: 'max@test.com',
-          cart: {
-            items: [],
-          },
-        });
-        return user.save();
-      }
-      // if user exist
-      return user;
-    })
-    .then((user) => {
-      console.log(user);
       req.user = user;
       next();
     })
@@ -54,7 +38,18 @@ app.use(errorController.get404);
 mongoose
   .connect('mongodb://mongo:27017/shop')
   .then((result) => {
-    // console.log(result);
+    User.findOne().then((user) => {
+      if (!user) {
+        const user = new User({
+          name: 'Max',
+          email: 'max@test.com',
+          cart: {
+            items: [],
+          },
+        });
+        user.save();
+      }
+    });
     app.listen(3000);
   })
   .catch((err) => {
