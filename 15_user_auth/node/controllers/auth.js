@@ -13,22 +13,7 @@ exports.getLogin = (req, res, next) => {
 
 exports.postLogin = (req, res, next) => {
   // try to fetch user
-  User.findOne()
-    .then((user) => {
-      // if user NOT exist
-      if (!user) {
-        const user = new User({
-          name: 'Max',
-          email: 'max@test.com',
-          cart: {
-            items: [],
-          },
-        });
-        return user.save();
-      }
-      // if user exist
-      return user;
-    })
+  User.findById('5bab316ce0a7c75f783cb8a8')
     .then((user) => {
       // save data to mongodb session collection
       req.session.isLoggedIn = true;
@@ -62,4 +47,26 @@ exports.getSignup = (req, res, next) => {
   });
 };
 
-exports.postSignup = (req, res, next) => {};
+exports.postSignup = (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+
+  User.findOne({ email: email })
+    .then((userDoc) => {
+      if (userDoc) {
+        return res.redirect('/signup');
+      }
+
+      const user = new User({
+        email,
+        password,
+        cart: { items: [] },
+      });
+      return user.save();
+    })
+    .then((result) => {
+      res.redirect('/login');
+    })
+    .catch((err) => console.log(err));
+};
