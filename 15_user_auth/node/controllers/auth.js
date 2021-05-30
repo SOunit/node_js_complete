@@ -13,19 +13,32 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  // try to fetch user
-  User.findById('5bab316ce0a7c75f783cb8a8')
-    .then((user) => {
-      // save data to mongodb session collection
-      req.session.isLoggedIn = true;
-      // user lost mongoose methods when saved in mongodb
-      // so in app.js re-fetching object is needed by using User model
-      req.session.user = user;
+  const email = req.body.email;
+  const password = req.body.password;
 
-      // use save mthod to prevent redirecting before mongodb update finish
-      req.session.save((err) => {
-        console.log(err);
-        res.redirect('/');
+  // try to fetch user
+  // if email and password match, save data to session
+  // else redirect to login page
+  User.findOne({ email: email })
+    .then((user) => {
+      if (!user) {
+        return res.redirect('/login');
+      }
+      bcrypt.compare(password, user.password).then((doMatch) => {
+        if (doMatch) {
+          // save data to mongodb session collection
+          req.session.isLoggedIn = true;
+          // user lost mongoose methods when saved in mongodb
+          // so in app.js re-fetching object is needed by using User model
+          req.session.user = user;
+
+          // use save mthod to prevent redirecting before mongodb update finish
+          return req.session.save((err) => {
+            console.log(err);
+            res.redirect('/');
+          });
+        }
+        res.redirect('/login');
       });
     })
     .catch((err) => console.log(err));
