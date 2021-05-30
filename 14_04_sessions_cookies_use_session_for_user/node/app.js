@@ -10,6 +10,8 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
+const User = require('./models/user');
+
 const MONGO_DB_URL = 'mongodb://mongo:27017/shop';
 
 const app = express();
@@ -34,6 +36,20 @@ app.use(
     store: store,
   })
 );
+
+// setup user with mongoose method, save it in request
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+
+  User.findById(req.session.user._id)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
+});
 
 // router
 app.use('/admin', adminRoutes);

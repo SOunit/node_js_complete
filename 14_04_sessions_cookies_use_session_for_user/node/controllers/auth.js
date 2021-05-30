@@ -30,7 +30,10 @@ exports.postLogin = (req, res, next) => {
       return user;
     })
     .then((user) => {
+      // save data to mongodb session collection
       req.session.isLoggedIn = true;
+      // user lost mongoose method when saved in mongodb
+      // so in app.js re-fetching object is needed by using User model
       req.session.user = user;
       res.redirect('/');
     })
