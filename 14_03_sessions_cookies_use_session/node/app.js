@@ -10,6 +10,8 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
+const User = require('./models/user');
+
 const MONGO_DB_URL = 'mongodb://mongo:27017/shop';
 
 const app = express();
@@ -34,6 +36,32 @@ app.use(
     store: store,
   })
 );
+
+// set user
+app.use((req, res, next) => {
+  // try to fetch user
+  User.findOne()
+    .then((user) => {
+      // if user NOT exist
+      if (!user) {
+        const user = new User({
+          name: 'Max',
+          email: 'max@test.com',
+          cart: {
+            items: [],
+          },
+        });
+        return user.save();
+      }
+      // if user exist
+      return user;
+    })
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
+});
 
 // router
 app.use('/admin', adminRoutes);
