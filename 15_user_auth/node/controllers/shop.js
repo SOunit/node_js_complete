@@ -9,6 +9,7 @@ exports.getIndex = (req, res, next) => {
         pageTitle: 'Shop',
         prods: products,
         isAuthenticated: req.session.isLoggedIn,
+        csrfToken: req.csrfToken(),
         productCSS: true,
         formsCSS: false,
       });

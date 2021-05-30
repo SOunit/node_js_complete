@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
+const csrf = require('csurf');
 
 const errorController = require('./controllers/error');
 const adminRoutes = require('./routes/admin');
@@ -19,6 +20,7 @@ const store = new MongoDBStore({
   uri: MONGO_DB_URL,
   collection: 'sessions',
 });
+const csrfProtection = csrf();
 
 // middle wares
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -36,6 +38,8 @@ app.use(
     store: store,
   })
 );
+// csurf needs session, so this must be after session setting code
+app.use(csrfProtection);
 
 // setup user with mongoose method, save it in request
 app.use((req, res, next) => {
