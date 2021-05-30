@@ -51,3 +51,15 @@ exports.postLogout = (req, res, next) => {
     res.redirect('/');
   });
 };
+
+exports.getSignup = (req, res, next) => {
+  res.render('auth/signup', {
+    path: '/signup',
+    pageTitle: 'Signup',
+    isAuthenticated: false,
+    productCSS: false,
+    formsCSS: true,
+  });
+};
+
+exports.postSignup = (req, res, next) => {};
