@@ -1,9 +1,10 @@
 exports.getLogin = (req, res, next) => {
-  const isLoggedIn = req.get('Cookie').split(';')[5].trim().split('=')[1];
+  console.log(req.session.isLoggedIn);
+  // const isLoggedIn = req.get('Cookie').split(';')[5].trim().split('=')[1];
   res.render('auth/login', {
     path: '/login',
     pageTitle: 'Login',
-    isAuthenticated: isLoggedIn,
+    isAuthenticated: false,
     productCSS: false,
     formsCSS: true,
   });
@@ -15,6 +16,9 @@ exports.postLogin = (req, res, next) => {
   // avaialbe later process, and ends when making request
   // req.isLoggedIn = true;
 
-  res.setHeader('Set-Cookie', 'loggedIn=true');
+  // this is possible, but security weak, easy to change in browser
+  // res.setHeader('Set-Cookie', 'loggedIn=true');
+
+  req.session.isLoggedIn = true;
   res.redirect('/');
 };
