@@ -55,6 +55,13 @@ app.use((req, res, next) => {
     .catch((err) => console.log(err));
 });
 
+// set params for all view rendering
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 // router
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
