@@ -1,7 +1,7 @@
 const User = require('../models/user');
 
 exports.getLogin = (req, res, next) => {
-  console.log(req.session.isLoggedIn);
+  console.log(req.isLoggedIn);
   res.render('auth/login', {
     path: '/login',
     pageTitle: 'Login',
@@ -12,7 +12,7 @@ exports.getLogin = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  // store data in session sample
-  req.session.isLoggedIn = true;
+  // store data in request sample
+  req.isLoggedIn = true;
   res.redirect('/');
 };
