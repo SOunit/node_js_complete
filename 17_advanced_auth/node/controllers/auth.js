@@ -1,7 +1,8 @@
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
-const envs = require('../envs');
 
+const envs = require('../envs');
 const User = require('../models/user');
 const transporter = nodemailer.createTransport({
   host: 'smtp.mailtrap.io',
@@ -140,5 +141,46 @@ exports.getReset = (req, res, next) => {
     errorMessage: message,
     productCSS: false,
     formsCSS: true,
+  });
+};
+
+exports.postReset = (req, res, next) => {
+  crypto.randomBytes(32, (err, buffer) => {
+    if (err) {
+      console.log(err);
+      return res.redirect('/reset');
+    }
+    const token = buffer.toString('hex');
+    User.findOne({ email: req.body.email })
+      .then((user) => {
+        if (!user) {
+          req.flash('error', 'No account with that email found!');
+          return res.redirect('/reset');
+        }
+
+        // set token
+        user.resetToken = token;
+
+        // set token expiration time
+        // base time is mili seconds
+        const oneSecond = 1 * 1000;
+        const oneMinute = oneSecond * 60;
+        // expirate after 60 mins
+        user.resetTokenExpiration = Date.now() + oneMinute * 60;
+        return user.save();
+      })
+      .then((result) => {
+        res.redirect('/');
+        return transporter.sendMail({
+          to: req.body.email,
+          from: 'shop@node-complete.com',
+          subject: 'Password reset',
+          html: `
+            <p>You requested a password reset</p>
+            <p>Click this <a href="http://localhost/reset/${token}">link</a> to set a new password</p>
+          `,
+        });
+      })
+      .catch((err) => console.log(err));
   });
 };
