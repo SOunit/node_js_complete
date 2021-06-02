@@ -1,8 +1,10 @@
 const express = require('express');
 const { check, body } = require('express-validator/check');
 
-const router = express.Router();
 const authController = require('../controllers/auth');
+const User = require('../models/user');
+
+const router = express.Router();
 
 router.get('/login', authController.getLogin);
 router.post('/login', authController.postLogin);
@@ -18,11 +20,21 @@ router.post(
       .isEmail()
       .withMessage('Please enter a valid email.')
       .custom((value, { req }) => {
-        if (value === 'test@test.com') {
-          throw new Error('This email address is forbidden.');
-        }
-        // for ok cases
-        return true;
+        // if (value === 'test@test.com') {
+        //   throw new Error('This email address is forbidden.');
+        // }
+        // // for ok cases
+        // return true;
+        //
+        // custom expects true, promise finish for TRUE
+        // custom expects Exception, promise.reject for FALSE
+        return User.findOne({ email: value }).then((userDoc) => {
+          if (userDoc) {
+            return Promise.reject(
+              'E-mail exists already, please pick a different one.'
+            );
+          }
+        });
       }),
     // check is only for body
     body(
