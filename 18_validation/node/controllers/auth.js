@@ -37,6 +37,17 @@ exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  const errors = validationResult(req);
+  if (!errors.isEmpty) {
+    return res.status(422).render('auth/login', {
+      path: '/login',
+      pageTitle: 'login',
+      errorMessage: errors.array()[0].msg,
+      productCSS: false,
+      formsCSS: true,
+    });
+  }
+
   // try to fetch user
   // if email and password match, save data to session
   // else redirect to login page
@@ -86,6 +97,7 @@ exports.getSignup = (req, res, next) => {
     path: '/signup',
     pageTitle: 'Signup',
     errorMessage: message,
+    oldInput: { email: '', password: '', confirmPassword: '' },
     productCSS: false,
     formsCSS: true,
   });
@@ -94,6 +106,7 @@ exports.getSignup = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
 
   // check errors from validator in routes file
   const errors = validationResult(req);
@@ -103,6 +116,7 @@ exports.postSignup = (req, res, next) => {
       path: '/signup',
       pageTitle: 'Signup',
       errorMessage: errors.array()[0].msg,
+      oldInput: { email, password, confirmPassword },
       productCSS: false,
       formsCSS: true,
     });
