@@ -1,10 +1,12 @@
 const crypto = require('crypto');
+
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const { validationResult } = require('express-validator/check');
 
 const envs = require('../envs');
 const User = require('../models/user');
-const user = require('../models/user');
+
 const transporter = nodemailer.createTransport({
   host: 'smtp.mailtrap.io',
   port: 2525,
@@ -93,6 +95,18 @@ exports.postSignup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
+  // get errors from validator in routes file
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log(errors.array());
+    return res.status(422).render('auth/signup', {
+      path: '/signup',
+      pageTitle: 'Signup',
+      errorMessage: errors.array(),
+      productCSS: false,
+      formsCSS: true,
+    });
+  }
 
   User.findOne({ email: email })
     .then((userDoc) => {
