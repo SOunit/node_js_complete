@@ -1,0 +1,28 @@
+// MailTrap url
+https://mailtrap.io/inboxes
+
+// What is MailTrap?
+Third Party Mail Server Service
+
+// envs.js
+to upload src, to hide access key info
+
+path:
+node/envs.js
+
+// How to get access key
+In MailBox page,
+Inboxes > My Inbox
+Integrations = node.js = Nodemailer
+
+sample code is like this:
+
+var transport = nodemailer.createTransport({
+  host: "smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "your actual user here",
+    pass: "your actual pass here"
+  }
+});
+
