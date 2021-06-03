@@ -81,8 +81,14 @@ app.use((req, res, next) => {
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
-app.use(errorController.get404);
 app.use('/500', errorController.get500);
+app.use(errorController.get404);
+
+// error handling middleware
+app.use((error, req, res, next) => {
+  // res.status(error.httpStatusCode).render('sample_page');
+  res.redirect('/500');
+});
 
 mongoose
   .connect(MONGO_DB_URL)

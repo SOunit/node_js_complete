@@ -58,9 +58,10 @@ exports.postAddProduct = (req, res, next) => {
       res.redirect('/admin/products');
     })
     .catch((err) => {
-      // show error page approach for error
-      // this code if for bigger issues, NOT temporary
-      res.redirect('/500');
+      // use middleware to handle error
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
