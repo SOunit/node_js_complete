@@ -16,6 +16,7 @@ const authRoutes = require('./routes/auth');
 
 // import classes for mongodb
 const User = require('./models/user');
+const { exception } = require('console');
 
 // create constant
 const MONGO_DB_URL = 'mongodb://mongo:27017/shop';
@@ -57,10 +58,16 @@ app.use((req, res, next) => {
 
   User.findById(req.session.user._id)
     .then((user) => {
+      if (!user) {
+        return next();
+      }
       req.user = user;
       next();
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      // throw Error, express take care of it.
+      throw new Error(err);
+    });
 });
 
 // set params for all view rendering
