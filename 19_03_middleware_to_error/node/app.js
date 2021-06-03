@@ -50,6 +50,13 @@ app.use(csrfProtection);
 // to show error messages and etc. for user experience
 app.use(flash());
 
+// set params for all view rendering
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 // setup user with mongoose method, save it in request
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -66,15 +73,8 @@ app.use((req, res, next) => {
     })
     .catch((err) => {
       // throw Error, express take care of it.
-      throw new Error(err);
+      next(new Error(err));
     });
-});
-
-// set params for all view rendering
-app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
-  next();
 });
 
 // router
@@ -87,7 +87,17 @@ app.use(errorController.get404);
 // error handling middleware
 app.use((error, req, res, next) => {
   // res.status(error.httpStatusCode).render('sample_page');
-  res.redirect('/500');
+
+  // to avoid error loop
+  // res.redirect('/500');
+
+  res.status(500).render('500', {
+    path: '/500',
+    pageTitle: 'Error!',
+    isAuthenticated: req.session.isLoggedIn,
+    productCSS: false,
+    formsCSS: false,
+  });
 });
 
 mongoose
