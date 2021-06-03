@@ -28,6 +28,8 @@ exports.getLogin = (req, res, next) => {
     path: '/login',
     pageTitle: 'Login',
     errorMessage: message,
+    oldInput: { email: '', password: '' },
+    validationErrors: [],
     productCSS: false,
     formsCSS: true,
   });
@@ -37,25 +39,36 @@ exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  // if error exists
   const errors = validationResult(req);
-  if (!errors.isEmpty) {
+  if (!errors.isEmpty()) {
     return res.status(422).render('auth/login', {
       path: '/login',
       pageTitle: 'login',
       errorMessage: errors.array()[0].msg,
+      oldInput: { email, password },
+      validationErrors: errors.array(),
       productCSS: false,
       formsCSS: true,
     });
   }
 
+  // if error NOT exist
   // try to fetch user
   // if email and password match, save data to session
   // else redirect to login page
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
-        req.flash('error', 'Invalid email or password.');
-        return res.redirect('/login');
+        return res.status(422).render('auth/login', {
+          path: '/login',
+          pageTitle: 'login',
+          errorMessage: 'Invalid email or password.',
+          oldInput: { email, password },
+          validationErrors: [],
+          productCSS: false,
+          formsCSS: true,
+        });
       }
       bcrypt.compare(password, user.password).then((doMatch) => {
         if (doMatch) {
@@ -71,8 +84,15 @@ exports.postLogin = (req, res, next) => {
             res.redirect('/');
           });
         }
-        req.flash('error', 'Invalid email or password.');
-        res.redirect('/login');
+        return res.status(422).render('auth/login', {
+          path: '/login',
+          pageTitle: 'login',
+          errorMessage: 'Invalid email or password.',
+          oldInput: { email, password },
+          validationErrors: [],
+          productCSS: false,
+          formsCSS: true,
+        });
       });
     })
     .catch((err) => console.log(err));
