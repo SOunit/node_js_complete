@@ -17,7 +17,7 @@ const authRoutes = require('./routes/auth');
 
 // import classes for mongodb
 const User = require('./models/user');
-const { exception } = require('console');
+const { db } = require('./models/user');
 
 // create constant
 const MONGO_DB_URL = 'mongodb://mongo:27017/shop';
@@ -29,12 +29,20 @@ const store = new MongoDBStore({
   collection: 'sessions',
 });
 const csrfProtection = csrf();
+const fileStrage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + '-' + file.originalname);
+  },
+});
 
 // setup middle wares
 // for form submit
 app.use(bodyParser.urlencoded({ extended: false }));
 // for image upload
-app.use(multer({ dest: 'images' }).single('image'));
+app.use(multer({ storage: fileStrage }).single('image'));
 // template engine
 app.set('view engine', 'ejs');
 app.set('views', 'views');
