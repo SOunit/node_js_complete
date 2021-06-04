@@ -19,12 +19,12 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title;
-  const imagea = req.file;
-  console.log(imagea);
+  const image = req.file;
+  console.log(image);
   const price = req.body.price;
   const description = req.body.description;
 
-  if (!imagea) {
+  if (!image) {
     return res.status(422).render('admin/edit-product', {
       pageTitle: 'Add Product',
       path: '/admin/add-product',
@@ -42,7 +42,7 @@ exports.postAddProduct = (req, res, next) => {
     });
   }
 
-  const imageUrl = imagea.path;
+  const imageUrl = image.path;
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

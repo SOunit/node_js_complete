@@ -52,9 +52,7 @@ const fileFilter = (req, file, cb) => {
 // for form submit
 app.use(bodyParser.urlencoded({ extended: false }));
 // for image upload
-app.use(
-  multer({ storage: fileStrage, fileFilter: fileFilter }).single('image')
-);
+app.use(multer({ storage: fileStrage, fileFilter }).single('image'));
 // template engine
 app.set('view engine', 'ejs');
 app.set('views', 'views');
