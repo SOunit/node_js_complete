@@ -59,6 +59,7 @@ app.set('views', 'views');
 // to import css
 app.use(express.static(path.join(__dirname, 'public')));
 // to display uploaded images
+// by passing path, node look for the pass as default, not root path.
 app.use('/images', express.static(path.join(__dirname, 'images')));
 // session config
 app.use(
