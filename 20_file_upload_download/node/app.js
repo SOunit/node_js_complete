@@ -7,6 +7,7 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
+const multer = require('multer');
 
 // import classes
 const errorController = require('./controllers/error');
@@ -30,7 +31,10 @@ const store = new MongoDBStore({
 const csrfProtection = csrf();
 
 // setup middle wares
+// for form submit
 app.use(bodyParser.urlencoded({ extended: false }));
+// for image upload
+app.use(multer({ dest: 'images' }).single('image'));
 // template engine
 app.set('view engine', 'ejs');
 app.set('views', 'views');
