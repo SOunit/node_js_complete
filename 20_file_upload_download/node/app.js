@@ -17,7 +17,6 @@ const authRoutes = require('./routes/auth');
 
 // import classes for mongodb
 const User = require('./models/user');
-const { db } = require('./models/user');
 
 // create constant
 const MONGO_DB_URL = 'mongodb://mongo:27017/shop';
