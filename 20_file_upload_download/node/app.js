@@ -58,6 +58,8 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 // to import css
 app.use(express.static(path.join(__dirname, 'public')));
+// to display uploaded images
+app.use('/images', express.static(path.join(__dirname, 'images')));
 // session config
 app.use(
   session({
