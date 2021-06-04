@@ -36,12 +36,23 @@ const fileStrage = multer.diskStorage({
     cb(null, new Date().toISOString() + '-' + file.originalname);
   },
 });
+const fileFilter = (req, file, cb) => {
+  if (
+    file.minetype === 'image/png' ||
+    file.minetype === 'image/jpg' ||
+    file.minetype === 'image/jpeg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
 
 // setup middle wares
 // for form submit
 app.use(bodyParser.urlencoded({ extended: false }));
 // for image upload
-app.use(multer({ storage: fileStrage }).single('image'));
+app.use(multer({ storage: fileStrage, fileFilter }).single('image'));
 // template engine
 app.set('view engine', 'ejs');
 app.set('views', 'views');
