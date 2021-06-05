@@ -176,11 +176,18 @@ exports.getInvoice = (req, res, next) => {
       const invoiceName = 'invoice-' + orderId + '.pdf';
       const invoicePath = path.join('data', 'invoices', invoiceName);
 
-      const file = fs.createReadStream(invoicePath);
+      const pdfDoc = new PDFDocument();
       res.setHeader('Content-Type', 'application/pdf');
       // setting for how to open file in client side : open in browser
       res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`);
-      file.pipe(res);
+
+      // save pdf in server
+      pdfDoc.pipe(fs.createWriteStream(invoicePath));
+      // set response content to client
+      pdfDoc.pipe(res);
+
+      pdfDoc.text('Hello world!');
+      pdfDoc.end();
     })
     .catch((err) => next(err));
 };
