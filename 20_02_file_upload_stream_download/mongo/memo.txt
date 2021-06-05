@@ -1,0 +1,10 @@
+// how to connect mongo compass
+mongodb://localhost:27017
+
+// connect with user, password
+mongodb://[user]:[password]@localhost:27017
+
+// ATTENTION
+contenst in console log and actual mongodb data is different!!!
+so you should check in mongo db compass!
+
