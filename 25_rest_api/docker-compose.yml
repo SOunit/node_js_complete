@@ -12,6 +12,13 @@ services:
       context: ./nginx
     ports:
       - 80:80
+  node:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./node
+    volumes:
+      - ./app/node_modules
+      - ./node:/app
   client:
     stdin_open: true
     build:
