@@ -1,7 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const feedRoutes = require('./routes/feed');
+
+// create constant
+const MONGO_DB_URL = 'mongodb://mongo:27017/messages';
 
 const app = express();
 
@@ -25,4 +29,11 @@ app.use((req, res, next) => {
 // routes
 app.use('/feed', feedRoutes);
 
-app.listen(8080);
+mongoose
+  .connect(MONGO_DB_URL)
+  .then((result) => {
+    app.listen(8080);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
