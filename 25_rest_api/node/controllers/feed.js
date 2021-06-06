@@ -26,7 +26,13 @@ exports.createPost = (req, res, next) => {
     // sync code do NOT need next() to throw error
     throw error;
   }
+  if (!req.file) {
+    const error = new Error('No image provided.');
+    error.statusCode = 422;
+    throw error;
+  }
 
+  const imageUrl = req.file.path;
   const title = req.body.title;
   const content = req.body.content;
 
@@ -34,7 +40,7 @@ exports.createPost = (req, res, next) => {
   const post = new Post({
     title,
     content,
-    imageUrl: 'images/che_prof.jpeg',
+    imageUrl,
     creator: { name: 'Jack' },
   });
   post
