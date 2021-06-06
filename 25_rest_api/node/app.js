@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const path = require('path');
 
 const feedRoutes = require('./routes/feed');
 
@@ -14,6 +15,8 @@ const app = express();
 
 // for application/json, for json data in request
 app.use(bodyParser.json());
+// for static image file serve
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // setup for cors header
 app.use((req, res, next) => {
@@ -28,6 +31,14 @@ app.use((req, res, next) => {
 
 // routes
 app.use('/feed', feedRoutes);
+
+// general error handling
+app.use((error, req, res, next) => {
+  console.log(error);
+  const status = error.statusCode || 500;
+  const message = error.message;
+  res.status(status).json({ message });
+});
 
 mongoose
   .connect(MONGO_DB_URL)

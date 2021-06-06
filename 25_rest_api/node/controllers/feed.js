@@ -22,10 +22,10 @@ exports.getPosts = (req, res, next) => {
 exports.createPost = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(422).json({
-      message: 'Validation failed, entered data is not collect.',
-      errors: errors.array(),
-    });
+    const error = new Error('Validation failed, entered data is not collect.');
+    error.statusCode = 422;
+    // sync code do NOT need next() to throw error
+    throw error;
   }
 
   const title = req.body.title;
@@ -46,5 +46,11 @@ exports.createPost = (req, res, next) => {
         .status(201)
         .json({ message: 'Post created successfully!', post: result });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      // async code need next() to throw error
+      next(err);
+    });
 };
