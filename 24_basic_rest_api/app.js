@@ -13,11 +13,11 @@ app.use(bodyParser.json());
 
 // setup for cors header
 app.use((req, res, next) => {
-  // which client allowed to access
+  // allow origin, localhost:8080, sample.com
   res.setHeader('Access-Control-Allow-Origin', '*');
-  // which method allowed to execute
+  // allow methods
   res.setHeader('Access-Control-Allow-Method', 'GET, POST, PUT, PATCH, DELETE');
-  // auth setting
+  // allow setting content-type in client side
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
