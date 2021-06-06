@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import './Backdrop.css';
 
-const backdrop = props =>
+const backdrop = (props) =>
   ReactDOM.createPortal(
     <div
       className={['backdrop', props.open ? 'open' : ''].join(' ')}
