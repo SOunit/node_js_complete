@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 
 const feedRoutes = require('./routes/feed');
+const authRoutes = require('./routes/auth');
 
 // create constant
 const MONGO_DB_URL = 'mongodb://mongo:27017/messages';
@@ -56,6 +57,7 @@ app.use((req, res, next) => {
 
 // routes
 app.use('/feed', feedRoutes);
+app.use('/auth', authRoutes);
 
 // general error handling
 app.use((error, req, res, next) => {
