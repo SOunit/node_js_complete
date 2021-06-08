@@ -140,6 +140,13 @@ exports.updatePost = (req, res, next) => {
         throw error;
       }
 
+      // check for user authorization
+      if (post.creator.toString() !== req.userId.toString()) {
+        const error = new Error('Not authorized.');
+        error.statusCode = 403;
+        throw error;
+      }
+
       // delete file if new path is different.
       if (post.imageUrl !== imageUrl) {
         clearImage(post.imageUrl);
@@ -176,6 +183,11 @@ exports.deletePost = (req, res, next) => {
       }
 
       // check logged in user
+      if (post.creator.toString() !== req.userId.toString()) {
+        const error = new Error('Not authorized.');
+        error.statusCode = 403;
+        throw error;
+      }
 
       clearImage(post.imageUrl);
       return Post.findByIdAndDelete(postId);
