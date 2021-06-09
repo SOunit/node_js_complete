@@ -81,3 +81,41 @@ exports.login = (req, res, next) => {
       next(err);
     });
 };
+
+exports.getStatus = (req, res, next) => {
+  User.findById(req.userId)
+    .then((user) => {
+      if (!user) {
+        const error = new Error('A user with this email cound not be found.');
+        error.statusCode = 401;
+        throw error;
+      }
+      res.status(200).json({ status: user.status });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      // async code need next() to throw error
+      next(err);
+    });
+};
+
+exports.updateUserStatus = (req, res, next) => {
+  const newStatus = req.body.status;
+  User.findById(req.userId)
+    .then((user) => {
+      user.status = newStatus;
+      return user.save();
+    })
+    .then((result) => {
+      res.status(200).json({ message: 'User updated!' });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      // async code need next() to throw error
+      next(err);
+    });
+};
