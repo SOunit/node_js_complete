@@ -39,7 +39,14 @@ class Feed extends Component {
       })
       .catch(this.catchError);
     this.loadPosts();
-    openSocket('http://localhost/node');
+
+    // FIXME: this connection failed
+    const socket = openSocket('http://localhost/node');
+    console.log(socket);
+    // this never happen because of connection error
+    socket.on('posts', (data) => {
+      this.addPost(data);
+    });
   }
 
   addPost = (post) => {
