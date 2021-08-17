@@ -11,7 +11,8 @@ const app = express();
 // for application/json, for json data in request
 app.use(bodyParser.json());
 
-// setup for cors header
+// setup for cors header ( without library )
+// this setup can be replaced by cors library
 app.use((req, res, next) => {
   // allow origin, localhost:8080, sample.com
   res.setHeader('Access-Control-Allow-Origin', '*');
