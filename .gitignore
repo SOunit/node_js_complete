@@ -3,7 +3,7 @@ node_modules/
 # sample output file
 output/
 data/
-# images/
+images/
 
 # user, password, key
 # envs.js
