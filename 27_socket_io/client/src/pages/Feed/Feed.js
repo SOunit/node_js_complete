@@ -43,7 +43,11 @@ class Feed extends Component {
     const socket = openSocket({
       path: '/socket.io',
     });
-    console.log('socket', socket);
+    socket.on('posts', (data) => {
+      if (data.action === 'create') {
+        this.addPost(data.post);
+      }
+    });
   }
 
   addPost = (post) => {
@@ -187,8 +191,6 @@ class Feed extends Component {
               (p) => p._id === prevState.editPost._id
             );
             updatedPosts[postIndex] = post;
-          } else if (prevState.posts.length < 2) {
-            updatedPosts = prevState.posts.concat(post);
           }
           return {
             posts: updatedPosts,
