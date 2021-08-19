@@ -17,8 +17,7 @@ services:
       dockerfile: Dockerfile.dev
       context: ./node
     volumes:
-      # setting for not copy node_modules, but this leads to error, comment out for now...
-      # - ./app/node_modules
+      - /app/node_modules
       - ./node:/app
   client:
     stdin_open: true
@@ -26,8 +25,7 @@ services:
       dockerfile: Dockerfile.dev
       context: ./client
     volumes:
-      # setting for not copy node_modules, but this leads to error, comment out for now...
-      #- ./app/node_modules
+      - /app/node_modules
       - ./client:/app
     # polling setting for Docker. activate auto reload when file change.
     environment:

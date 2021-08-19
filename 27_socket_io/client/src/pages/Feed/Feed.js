@@ -40,13 +40,10 @@ class Feed extends Component {
       .catch(this.catchError);
     this.loadPosts();
 
-    // FIXME: this connection failed
-    const socket = openSocket('http://localhost/node');
-    console.log(socket);
-    // this never happen because of connection error
-    socket.on('posts', (data) => {
-      this.addPost(data);
+    const socket = openSocket({
+      path: '/socket.io',
     });
+    console.log('socket', socket);
   }
 
   addPost = (post) => {
@@ -78,7 +75,8 @@ class Feed extends Component {
       page--;
       this.setState({ postPage: page });
     }
-    fetch(`http://localhost/node/feed/posts?page=${page}`, {
+    // fetch(`http://localhost/node/feed/posts?page=${page}`, {
+    fetch(`/node/feed/posts?page=${page}`, {
       headers: {
         Authorization: `Bearer ${this.props.token}`,
       },
