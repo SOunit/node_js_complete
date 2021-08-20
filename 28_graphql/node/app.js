@@ -7,7 +7,6 @@ const multer = require('multer');
 const { graphqlHTTP } = require('express-graphql');
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolvers = require('./graphql/resolvers');
-const resolvers = require('./graphql/resolvers');
 
 // create constant
 const MONGO_DB_URL = 'mongodb://mongo:27017/messages';

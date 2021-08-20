@@ -7,6 +7,7 @@ module.exports = {
     // const email = userInput.email;
 
     const errors = [];
+    console.log('userInput.email', { ...userInput });
     if (!validator.isEmail(userInput.email)) {
       errors.push({ message: 'E-Mail is invalid.' });
     }
@@ -25,7 +26,7 @@ module.exports = {
 
     const existingUser = await User.findOne({ email: userInput.email });
     if (existingUser) {
-      const error = new Error('Use exists already!');
+      const error = new Error('User exists already!');
       throw error;
     }
     const hashedPassword = await bcrypt.hash(userInput.password, 12);
