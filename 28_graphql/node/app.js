@@ -61,6 +61,9 @@ app.use(
   graphqlHTTP({
     schema: graphqlSchema,
     rootValue: graphqlResolvers,
+    // you can use graphql in link below
+    // http://localhost/node/graphql
+    graphiql: true,
   })
 );
 
