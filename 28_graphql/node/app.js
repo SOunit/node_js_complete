@@ -64,6 +64,15 @@ app.use(
     // you can use graphql in link below
     // http://localhost/node/graphql
     graphiql: true,
+    formatError(err) {
+      if (!err.originalError) {
+        return err;
+      }
+      const data = err.originalError.data;
+      const message = err.message || 'An error occured.';
+      const code = err.originalError.code || 500;
+      return { message, status: code, data };
+    },
   })
 );
 
