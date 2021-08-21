@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -65,6 +66,33 @@ app.use((req, res, next) => {
 // set boolean to req.isAuth
 app.use(auth);
 
+// image upload
+// graphql is only for json data
+// rest api approach is one of the cleanest approach
+
+// image upload flow
+// 1. in client, send put request with formData, formData is not json format, with image data
+// 2. in api, clear old image path,
+//    save image,
+//    return json format data with new image file path
+// 3. in client, send graphql request with json format data
+// 4. in api, create image data
+app.put('/post-image', (req, res, next) => {
+  if (!req.isAuth) {
+    throw new Error({ message: 'Not authenticated!' });
+  }
+
+  if (!req.file) {
+    return res.status(200).json({ message: 'No file provided!' });
+  }
+  if (req.body.oldPath) {
+    clearImage(req.body.oldPath);
+  }
+  return res
+    .status(201)
+    .json({ message: 'File stored', filePath: req.file.path });
+});
+
 app.use(
   '/graphql',
   graphqlHTTP({
@@ -102,3 +130,8 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+const clearImage = (filePath) => {
+  filePath = path.join(__dirname, '..', filePath);
+  fs.unlink(filePath, (err) => console.log(err));
+};
