@@ -1,14 +1,14 @@
 const path = require('path');
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const { graphqlHTTP } = require('express-graphql');
+
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolvers = require('./graphql/resolvers');
+const auth = require('./middleware/auth');
 
-// create constant
 const MONGO_DB_URL = 'mongodb://mongo:27017/messages';
 
 const app = express();
@@ -44,7 +44,9 @@ app.use(multer({ storage: fileStorage, fileFilter }).single('image'));
 // for static image file serve
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-// setup for cors header
+// setup for CORS header
+// Cross Origin Resource Sharing
+// localhsot:5050, localhost:8080 can't sahre resource by default
 app.use((req, res, next) => {
   // allow origin, localhost:8080, sample.com
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -59,6 +61,9 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// set boolean to req.isAuth
+app.use(auth);
 
 app.use(
   '/graphql',
