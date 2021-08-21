@@ -7,10 +7,10 @@ import Input from '../../components/Form/Input/Input';
 import Paginator from '../../components/Paginator/Paginator';
 import Loader from '../../components/Loader/Loader';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
-import './Feed.css';
 
-const GRAPHQL_ENDPOINT = '/node/graphql';
-const GRAPHQL_METHOD = 'POST';
+import consts from '../../util/consts';
+
+import './Feed.css';
 
 class Feed extends Component {
   state = {
@@ -76,8 +76,8 @@ class Feed extends Component {
     };
 
     // fetch(`http://localhost/node/feed/posts?page=${page}`, {
-    fetch(GRAPHQL_ENDPOINT, {
-      method: GRAPHQL_METHOD,
+    fetch(consts.GRAPHQL_ENDPOINT, {
+      method: consts.GRAPHQL_METHOD,
       headers: {
         Authorization: `Bearer ${this.props.token}`,
         'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ class Feed extends Component {
         `,
         };
 
-        return fetch(GRAPHQL_ENDPOINT, {
+        return fetch(consts.GRAPHQL_ENDPOINT, {
           method: 'POST',
           body: JSON.stringify(graphqlQuery),
           headers: {
