@@ -87,7 +87,7 @@ class App extends Component {
           throw new Error('User creation failed!');
         }
 
-        console.log(resData);
+        console.log('login resData', resData);
         this.setState({
           isAuth: true,
           token: resData.data.login.token,
@@ -144,7 +144,7 @@ class App extends Component {
         return res.json();
       })
       .then((resData) => {
-        console.log('resData', resData);
+        console.log('signup resData', resData);
         if (resData.errors && resData.errors[0].status === 422) {
           throw new Error(
             "Validation failed. Make sure the email address isn't used yet!"
@@ -154,7 +154,6 @@ class App extends Component {
           throw new Error('User creation failed!');
         }
 
-        console.log(resData);
         this.setState({ isAuth: false, authLoading: false });
         this.props.history.replace('/');
       })
