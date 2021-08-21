@@ -71,6 +71,7 @@ module.exports = {
 
     return { token, userId: user._id.toString() };
   },
+
   createPost: async ({ postInput }, req) => {
     if (!req.isAuth) {
       const error = new Error('Not authenticated!');
@@ -113,8 +114,8 @@ module.exports = {
     return {
       ...createdPost._doc,
       _id: createdPost._id.toString(),
-      createdAt: this.createPost.createdAt.toString(),
-      updatedAt: this.createPost.updatedAt.toString(),
+      createdAt: createdPost.createdAt.toString(),
+      updatedAt: createdPost.updatedAt.toString(),
     };
   },
 };
