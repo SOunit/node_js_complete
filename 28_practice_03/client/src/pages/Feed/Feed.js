@@ -28,7 +28,7 @@ class Feed extends Component {
     const graphqlQuery = {
       query: `
         query {
-
+          status(id: "${this.props.userId}")
         }
       `,
     };
