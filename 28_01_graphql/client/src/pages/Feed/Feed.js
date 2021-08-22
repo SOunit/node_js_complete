@@ -71,8 +71,9 @@ class Feed extends Component {
     }
 
     const graphqlQuery = {
-      query: `{
-          posts(page: ${page}){
+      query: `
+      query fetchPosts ($page: Int){
+          posts(page: $page){
             posts{
               _id
               title
@@ -86,6 +87,9 @@ class Feed extends Component {
             totalPosts
           }
       }`,
+      variables: {
+        page,
+      },
     };
 
     // fetch(`http://localhost/node/feed/posts?page=${page}`, {
@@ -121,14 +125,17 @@ class Feed extends Component {
     event.preventDefault();
     const graphqlQuery = {
       query: `
-        mutation {
-          updateStatus(status: "${this.state.status}"){
+        mutation updateUserStatus($userStatus: String){
+          updateStatus(status: $userStatus){
             _id
             name
             status
           }
         }
       `,
+      variables: {
+        userStatus: this.state.status,
+      },
     };
     fetch(consts.GRAPHQL_ENDPOINT, {
       method: consts.GRAPHQL_METHOD,
@@ -188,14 +195,14 @@ class Feed extends Component {
     })
       .then((res) => res.json())
       .then((fileResData) => {
-        const imageUrl = fileResData.filePath;
+        const imageUrl = fileResData.filePath || 'undefined';
 
         let graphqlQuery = {
           query: `
-            mutation {
-              createPost(postInput: {title: "${postData.title}"
-              , content: "${postData.content}"
-              , imageUrl: "${imageUrl}"}){
+            mutation createNewPost($title: String!, $content: String!, $imageUrl: String!){
+              createPost(postInput: {title: $title
+              , content: $content
+              , imageUrl: $imageUrl}){
                 _id
                 title
                 content
@@ -206,19 +213,27 @@ class Feed extends Component {
                 createdAt
               }
             }
-        `,
+          `,
+          variables: {
+            title: postData.title,
+            content: postData.content,
+            imageUrl: imageUrl,
+          },
         };
 
         if (this.state.editPost) {
           graphqlQuery = {
             query: `
-              mutation {
-                updatePost(id: "${this.state.editPost._id}"
-                , postInput: 
+              mutation updateExistingPost($id: ID!, $title: String!, $content: String!, $imageUrl: String!){
+                updatePost(
+                  id: $id
+                  , postInput: {
+                        title: $title
+                      , content: $content
+                      , imageUrl: $imageUrl
+                    }
+                )
                 {
-                  title: "${postData.title}"
-                , content: "${postData.content}"
-                , imageUrl: "${imageUrl}"}){
                   _id
                   title
                   content
@@ -230,6 +245,12 @@ class Feed extends Component {
                 }
               }
           `,
+            variables: {
+              id: this.state.editPost._id,
+              title: postData.title,
+              content: postData.content,
+              imageUrl: imageUrl,
+            },
           };
         }
 
@@ -246,13 +267,14 @@ class Feed extends Component {
         return res.json();
       })
       .then((resData) => {
+        console.log('editHandler resData', resData);
         if (resData.errors && resData.errors[0].status === 422) {
           throw new Error(
             "Validation failed. Make sure the email address isn't used yet!"
           );
         }
         if (resData.errors) {
-          throw new Error('User creation failed!');
+          throw new Error('Update post failed!');
         }
 
         console.log('finishEditHandler, resData', resData);

@@ -17,8 +17,8 @@ class SinglePost extends Component {
   componentDidMount() {
     const postId = this.props.match.params.postId;
     const graphqlQuery = {
-      query: `{
-        post(id: "${postId}"){
+      query: `query fetchSinglePost($postId: ID!){
+        post(id: $postId){
             title
             content
             imageUrl
@@ -29,6 +29,9 @@ class SinglePost extends Component {
           }
         }
       `,
+      variables: {
+        postId,
+      },
     };
     fetch(consts.GRAPHQL_ENDPOINT, {
       method: consts.GRAPHQL_METHOD,
@@ -50,7 +53,7 @@ class SinglePost extends Component {
         this.setState({
           title: resData.data.post.title,
           author: resData.data.post.creator.name,
-          image: `http://localhost/node/${resData.data.post.imageUrl}`,
+          image: `/node/${resData.data.post.imageUrl}`,
           date: new Date(resData.data.post.createdAt).toLocaleDateString(
             'en-US'
           ),
