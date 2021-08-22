@@ -236,4 +236,23 @@ module.exports = {
     await user.save();
     return true;
   },
+
+  status: async ({ id }, req) => {
+    console.log('resolvers status id', id);
+    if (!req.isAuth) {
+      const error = new Error('Not authenticated!');
+      error.code = 401;
+      throw error;
+    }
+
+    const user = await User.findById(id);
+    console.log('resolvers status user', user);
+    if (!user) {
+      const error = new Error('User not found');
+      error.code = 404;
+      throw error;
+    }
+
+    return user.status;
+  },
 };
