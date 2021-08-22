@@ -1,0 +1,7 @@
+// envs.js is like this
+
+const envs = {
+  USER_TOKEN_SECRET_KEY: 'some random text for token secret key',
+};
+
+module.exports = envs;
