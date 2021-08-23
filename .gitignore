@@ -7,3 +7,5 @@ images/
 
 # user, password, key
 # envs.js
+
+dist/
